@@ -1,0 +1,5 @@
+#!/bin/sh
+# 로컬 마크다운 뷰어 런처
+#   mdview                 뷰어만 실행
+#   mdview 문서.md          해당 파일을 열면서 실행
+exec python3 -u "$(dirname "$0")/server.py" "$@"

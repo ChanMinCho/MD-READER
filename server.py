@@ -464,6 +464,7 @@ class Handler(SimpleHTTPRequestHandler):
         ".sql": "text/plain; charset=utf-8", ".yml": "text/plain; charset=utf-8", ".yaml": "text/plain; charset=utf-8",
         ".md": "text/plain; charset=utf-8",
         ".pdf": "application/pdf",
+        ".webm": "video/webm", ".mp4": "video/mp4",
     }
     # 브라우저가 화면에 못 여는 첨부(엑셀 등)는 내려받기로 준다.
     DOWNLOAD_TYPES = {
@@ -496,9 +497,29 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"error": f"읽기 권한이 없습니다: {p}"}, 403)
         except OSError as e:
             return self._json({"error": f"읽지 못했습니다: {e}"}, 400)
-        self.send_response(200)
+        # 영상 탐색(seek)은 브라우저가 Range 로 일부만 요청한다. 단일 구간만 지원한다.
+        m = re.fullmatch(r"bytes=(\d*)-(\d*)", (self.headers.get("Range") or "").strip())
+        if m and (m.group(1) or m.group(2)):
+            total = len(data)
+            if m.group(1):
+                start = int(m.group(1))
+                end = min(int(m.group(2)), total - 1) if m.group(2) else total - 1
+            else:
+                start = max(total - int(m.group(2)), 0)
+                end = total - 1
+            if start > end or start >= total:
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{total}")
+                self.end_headers()
+                return
+            self.send_response(206)
+            self.send_header("Content-Range", f"bytes {start}-{end}/{total}")
+            data = data[start:end + 1]
+        else:
+            self.send_response(200)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(data)))
+        self.send_header("Accept-Ranges", "bytes")
         self.send_header("Cache-Control", "no-store")
         if download:
             self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{quote(p.name)}")

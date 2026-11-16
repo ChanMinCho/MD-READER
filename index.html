@@ -576,10 +576,12 @@ html[data-theme="dark"] .comp .shadow { background: rgba(0,0,0,.5); }
 .comp .zzz i { position: absolute; font: 700 12px ui-monospace, Menlo, monospace; font-style: normal; color: var(--fg-mid); opacity: 0; animation: cat-zzz 3s ease-in-out infinite; }
 .comp .zzz i:nth-child(1) { left: 0; top: 18px; } .comp .zzz i:nth-child(2) { left: 8px; top: 9px; animation-delay: 1s; } .comp .zzz i:nth-child(3) { left: 16px; top: 0; animation-delay: 2s; }
 .comp-tip {
-  position: absolute; right: 68px; bottom: 58px; width: max-content; padding: 5px 9px; font: 12px var(--pix);
+  position: absolute; right: 58px; bottom: calc(100% + 4px); width: max-content; padding: 5px 9px; font: 12px var(--pix);
   background: var(--bg); color: var(--fg); border: 2px solid var(--fg); opacity: 0; pointer-events: none; transition: opacity .2s;
 }
 .comp-tip.show { opacity: 1; }
+.comp.flip-x .comp-tip { right: auto; left: 58px; }
+.comp.flip-y .comp-tip { bottom: auto; top: calc(100% + 4px); }
 .comp #buddyMenu { right: 0; bottom: 84px; }
 .comp.flip-x #buddyMenu { right: auto; left: 0; }
 .comp.flip-y #buddyMenu { bottom: auto; top: 84px; }
@@ -643,15 +645,16 @@ html[data-theme="dark"] #buddy .shadow { background: rgba(0,0,0,.5); }
 @keyframes cat-zzz { 0% { opacity: 0; transform: translate(0,0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(10px,-16px); } }
 
 /* 말풍선·메뉴는 고양이를 따라다닌다 */
+/* 말풍선은 고양이 상자(124x92) 바깥에 붙인다. 안쪽에 두면 머리·몸과 겹친다 */
 #buddyTip {
-  position: absolute; right: 66px; bottom: 62px; width: max-content; max-width: 220px;
+  position: absolute; right: 58px; bottom: calc(100% + 4px); width: max-content; max-width: 220px;
   padding: 8px 12px; border-radius: 12px 12px 4px 12px; background: var(--fg); color: var(--bg);
   font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow);
   opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .25s, transform .25s;
 }
 #buddyTip.show { opacity: 1; transform: none; }
-#buddyWrap.flip-x #buddyTip { right: auto; left: 66px; border-radius: 12px 12px 12px 4px; }
-#buddyWrap.flip-y #buddyTip { bottom: auto; top: 56px; border-radius: 4px 12px 12px 12px; }
+#buddyWrap.flip-x #buddyTip { right: auto; left: 58px; border-radius: 12px 12px 12px 4px; }
+#buddyWrap.flip-y #buddyTip { bottom: auto; top: calc(100% + 4px); border-radius: 4px 12px 12px 12px; }
 #buddyWrap.flip-x.flip-y #buddyTip { border-radius: 12px 4px 12px 12px; }
 #buddyWrap.flip-x #buddyMenu { right: auto; left: 0; transform-origin: 15% 100%; }
 #buddyWrap.flip-y #buddyMenu { bottom: auto; top: 78px; }
@@ -839,6 +842,17 @@ kbd { border-width: 2px; border-bottom-width: 3px; }
 }
 #bgMenu.show { display: grid; }
 #bgMenu .bg-head { grid-column: 1 / -1; font-size: 12px; color: var(--fg-dim); padding: 0 2px 4px; }
+/* 화면보다 길어지면 메뉴 안에서만 스크롤한다 */
+#bgMenu { max-height: calc(100vh - 96px); overflow-y: auto; overscroll-behavior: contain; align-content: start; scrollbar-width: thin; }
+/* 접이식 묶음: 접히면 고른 것 하나만 보이고, 누르면 펼쳐진다. 고르면 다시 접힌다 */
+.pick { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.pick.fold > button:not(.on) { display: none; }
+.pick.fold > button.on { grid-column: 1 / -1; position: relative; padding-right: 26px; }
+.pick.fold > button.on::after { content: '▾'; position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font-weight: 400; color: var(--fg-dim); }
+.pick-head { cursor: pointer; display: flex; align-items: center; gap: 6px; user-select: none; }
+.pick-head::after { content: '▾'; margin-left: auto; color: var(--fg-dim); transition: transform .15s; }
+.pick-head.open::after { transform: rotate(180deg); }
+.pick-head:hover { color: var(--accent); }
 .bg-opt { padding: 6px 8px; font-size: 13px; text-align: left; border: 2px solid var(--line); background: var(--bg-sub); }
 .bg-opt:hover { border-color: var(--accent); }
 .bg-opt.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 700; }
@@ -6848,8 +6862,8 @@ function applyBg() {
   if (bgMotionOn()) bgState.timer = setInterval(() => { if (!document.hidden) bgFrame(); }, 100);
 }
 const bgMenu = $('#bgMenu');
-bgMenu.innerHTML = '<div class="bg-head">배경 (도트 풍경)</div>' +
-  BG_LIST.map(([k, label]) => `<button class="bg-opt" data-bg="${k}">${label}</button>`).join('') +
+bgMenu.innerHTML = '<div class="bg-head pick-head" data-pick="bg">배경 (도트 풍경)</div>' +
+  '<div class="pick fold" data-pick="bg">' + BG_LIST.map(([k, label]) => `<button class="bg-opt" data-bg="${k}">${label}</button>`).join('') + '</div>' +
   '<label class="bg-row">진하기 <input id="bgAlpha" type="range" min="3" max="70" step="1"></label>' +
   '<button class="bg-opt bg-wide" id="bgMotion">움직임 끄기</button>';
 $('#bgBtn').onclick = e => { e.stopPropagation(); document.querySelector('#mainMenu')?.classList.remove('show'); bgMenu.classList.toggle('show'); };
@@ -7164,8 +7178,29 @@ function removeComp() { const c = comps.pop(); c?.destroy(); }
 bgMenu.insertAdjacentHTML('beforeend', '<div class="bg-head" style="margin-top:6px">고양이 (최대 3마리)</div>' +
   '<div class="cat-count">마릿수 <button id="catMinus" title="한 마리 빼기">−</button><b id="catCount">1</b><button id="catPlus" title="한 마리 더">+</button></div>' +
   '<div class="cat-slots">' + COMP_NAMES.map((n, i) => `<button data-slot="${i}"${i ? ' hidden' : ''} class="${i ? '' : 'on'}">${n}</button>`).join('') + '</div>' +
-  Object.entries(BREEDS).map(([k, v]) => `<button class="cat-opt" data-breed="${k}" title="같은 품종을 다시 누르면 털 색이 바뀝니다">${v.name}</button>`).join('') +
-  '<div class="cat-coat-head" id="catCoatHead"></div><div class="cat-coats" id="catCoats"></div>');
+  '<div class="bg-head pick-head" data-pick="breed" style="margin-top:4px">품종</div>' +
+  '<div class="pick fold" data-pick="breed">' + Object.entries(BREEDS).map(([k, v]) => `<button class="cat-opt" data-breed="${k}" title="같은 품종을 다시 누르면 털 색이 바뀝니다">${v.name}</button>`).join('') + '</div>' +
+  '<div class="cat-coat-head pick-head" id="catCoatHead" data-pick="coat"></div><div class="cat-coats pick fold" id="catCoats" data-pick="coat"></div>');
+/* 접이식 묶음: 접힌 묶음을 누르면(고른 칸이든 제목이든) 그 묶음만 펼친다. 펼친 묶음에서 고르면 원래 동작을 한 뒤 접는다.
+   다른 클릭 처리보다 먼저 받아야 접힌 상태에서 고른 칸을 다시 누른 것이 "같은 품종 다시 누르기(털 색 바꾸기)"로 처리되지 않는다 */
+function foldPicks(except) {
+  bgMenu.querySelectorAll('.pick').forEach(p => p.classList.toggle('fold', p.dataset.pick !== except));
+  bgMenu.querySelectorAll('.pick-head').forEach(h => h.classList.toggle('open', h.dataset.pick === except));
+}
+bgMenu.addEventListener('click', e => {
+  const head = e.target.closest('.pick-head'), pick = e.target.closest('.pick');
+  if (head) { e.stopPropagation(); return foldPicks(head.classList.contains('open') ? null : head.dataset.pick); }
+  if (!pick) return;
+  if (pick.classList.contains('fold')) {
+    e.stopImmediatePropagation(); e.preventDefault();
+    const open = pick.dataset.pick;
+    foldPicks(open);
+    requestAnimationFrame(() => pick.scrollIntoView({ block: 'nearest' }));
+    return;
+  }
+  if (e.target.closest('button')) setTimeout(() => foldPicks(null));   // 고른 뒤 접는다
+}, true);
+$('#bgBtn').addEventListener('click', () => foldPicks(null));
 let catSlot = 0;
 const slotBreed = i => i === 0 ? (BREED.id || 'ragdoll') : comps[i - 1]?.breed;
 const catHidden = () => !!buddyData().hidden;

@@ -604,6 +604,9 @@ html[data-theme="dark"] .comp .shadow { background: rgba(0,0,0,.5); }
 .pet.face-l canvas { transform: scaleX(-1); }
 .pet.drag { cursor: grabbing; }
 .pet.drag .pet-move { animation: cat-dangle .6s ease-in-out infinite alternate; }
+.pet.drag.struggle .pet-move { animation: cat-wiggle .16s ease-in-out infinite alternate; }   /* 오래 들고 있으면 버둥거린다 */
+.pet.fly .pet-move { animation: cat-tumble .55s linear infinite; transform-origin: 50% 55%; }   /* 던지면 데굴데굴 */
+.pet.drag .shadow, .pet.fly .shadow { transform: scale(.5); opacity: .4; }
 .pet.hop .pet-move { animation: cat-jump .5s cubic-bezier(.3,.7,.4,1); }
 .pet.binky .pet-move { animation: pet-binky .7s cubic-bezier(.3,.7,.4,1); }       /* 토끼 빙키: 뛰어올라 몸을 비튼다 */
 @keyframes pet-binky { 0% { transform: none; } 40% { transform: translateY(-26px) rotate(-16deg); } 60% { transform: translateY(-24px) rotate(12deg); } 100% { transform: none; } }
@@ -861,6 +864,9 @@ html[data-theme="dark"] { --pix-shadow: 4px 4px 0 rgba(0, 0, 0, .55); --sb-thumb
 #bgMenu .bg-wide { grid-column: 1 / -1; text-align: center; }
 #topbar, #sidebar, #main, #scroller { z-index: auto; }
 #main { position: relative; z-index: 1; }
+/* 배경을 진하게 할수록 본문 뒤에 같은 색 판을 깔아 글이 묻히지 않게 한다. 기본 진하기(.12)에서는 거의 안 보이고 최대(.70)에서 88% */
+:root { --read-veil: clamp(0%, calc((var(--bg-alpha) - .08) * 160%), 88%); }
+#doc { background: color-mix(in srgb, var(--bg) var(--read-veil), transparent); box-shadow: 0 0 28px 14px color-mix(in srgb, var(--bg) var(--read-veil), transparent); }
 #scroller { z-index: 35; }   /* 본문(#main, z-index 1) 위에 있어야 눌린다 */
 #topbar { z-index: 40; background: color-mix(in srgb, var(--bg) 80%, transparent); border-bottom: 2px solid var(--line); }
 #sidebar { z-index: 30; background: color-mix(in srgb, var(--bg-sub) 82%, transparent); border-right: 2px solid var(--line); }
@@ -1002,6 +1008,15 @@ body.has-tabs #tabBar { display: flex; }
 .tab .x:hover { opacity: 1; color: var(--accent); background: var(--accent-soft); }
 #tabNew { flex: none; width: 28px; height: 28px; margin-bottom: 1px; font-size: 18px; line-height: 1; color: var(--fg-dim); }
 #tabNew:hover { color: var(--accent); background: var(--bg-inset); }
+#tabMenu {                                         /* 탭 우클릭 메뉴 */
+  position: fixed; z-index: 90; display: none; min-width: 190px; padding: 4px; font: 12.5px var(--pix);
+  background: var(--bg); color: var(--fg); border: 2px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+#tabMenu.show { display: block; }
+#tabMenu button { display: block; width: 100%; padding: 6px 10px; text-align: left; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+#tabMenu button:hover:not(:disabled) { background: var(--bg-inset); color: var(--accent); }
+#tabMenu button:disabled { opacity: .35; cursor: default; }
+#tabMenu hr { margin: 4px 2px; border: 0; border-top: 1px solid var(--line); }
 body.has-tabs #sidebar { top: 86px; }
 body.has-tabs #main { padding-top: 86px; }
 body.has-tabs.editing #editPane { top: 86px; height: calc(100vh - 86px); }
@@ -1169,6 +1184,7 @@ body.has-tabs #trBar { top: 94px; }
   </div>
 </div>
 
+<div id="tabMenu" role="menu"><button data-a="this">이 탭 닫기</button><button data-a="others">이 탭 말고 모두 닫기</button><hr><button data-a="left">왼쪽 탭 모두 닫기</button><button data-a="right">오른쪽 탭 모두 닫기</button><hr><button data-a="all">탭 모두 닫기</button></div>
 <div id="tabBar"><div class="tabs" role="tablist"></div><button id="tabNew" title="새 탭 (문서 링크·최근 파일을 ⌘ 누른 채 클릭해도 새 탭)" aria-label="새 탭">+</button></div>
 
 <aside id="sidebar">
@@ -3074,7 +3090,7 @@ const FAQ = [
   ['보기', '배경 그림을 바꾸려면요?', '오른쪽 위 메뉴(≡) → <b>배경 고르기</b>에서 도트 풍경을 고를 수 있습니다: 들판 · 숲 · 강 · 바닷가 · 도시 · 시골집 · 한강 불꽃놀이 · 없음. 밝은 테마는 낮, 어두운 테마는 밤 풍경입니다(한강 불꽃놀이는 늘 해 진 뒤). 구름·새·물결·별·반딧불이·연기·차·불꽃이 움직이며, 같은 메뉴에서 진하기를 조절하거나 움직임을 끌 수 있습니다. 고른 설정은 다음에도 유지됩니다.'],
   ['보기', '다크 모드는요?', '오른쪽 위 메뉴(≡)의 <b>어둡게 보기 / 밝게 보기</b>로 바꿉니다. 고른 테마는 다음에 열 때도 유지됩니다.'],
   ['보기', '탭으로 여러 문서를 띄울 수 있나요?', `<ul>
-    <li>문서를 열면 위에 탭 줄이 생깁니다. <b>+</b> 로 빈 탭을 열고, 탭을 눌러 오가며, × 나 가운데 버튼으로 닫습니다.</li>
+    <li>문서를 열면 위에 탭 줄이 생깁니다. <b>+</b> 로 빈 탭을 열고, 탭을 눌러 오가며, × 나 가운데 버튼으로 닫습니다. 탭을 우클릭하면 이 탭 · 이 탭 말고 모두 · 왼쪽 · 오른쪽 · 모두 닫기를 고를 수 있습니다.</li>
     <li>문서 안 링크·최근 파일·즐겨찾기를 <kbd>⌘</kbd> 누른 채 클릭하면 새 탭에서 열립니다.</li>
     <li>열어 둔 탭은 뷰어를 다시 켜도 그대로 남습니다.</li></ul>`],
   ['보기', '앞 문서로 돌아가려면요?', '왼쪽 위 <b>‹ ›</b> 버튼, <kbd>⌘[</kbd> / <kbd>⌘]</kbd>, 마우스 뒤로·앞으로 버튼을 씁니다. 돌아가면 보던 자리로 갑니다. 기록은 탭마다 따로입니다.'],
@@ -3147,7 +3163,7 @@ const FAQ = [
     <li>여러 마리면 서로 다가가 장난치고, 우다다 쫓아다니고, 서로 핥아 주고, 나란히 그루밍해요. 걷다가 부딪히면 넘어지고, 잘 시간이면 곁으로 모여 같이 자요.</li>
     <li>간식은 1분에 3번까지 먹습니다.</li>
     <li>놀아 줄수록 친밀도가 오르고 메뉴 위 막대가 찹니다.</li></ul>`],
-  ['고양이', '강아지·토끼·양도 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b>에서 강아지 · 양 · 토끼를 펼쳐 <b>마릿수(+/−)</b>로 데려오거나 들여보냅니다. 같은 동물을 여러 마리 둘 수 있고, 모델은 지금 한 가지씩입니다(시바 · 하얀 양 · 흰 토끼). 혼자 산책하고, 앉고, 잠을 잡니다. 누르면 메뉴가 떠서 <b>쓰다듬기 · 사료(먹이) 주기 · 낮잠 재우기 · 가만히 있기</b>를 할 수 있습니다. 강아지는 사료를, 토끼는 당근이나 풀을, 양은 땅에 고개를 숙여 풀을 뜯습니다. 레이저 · 장난감 · 사냥 구경 · 간식 · 츄르 · 캣타워는 고양이만 합니다.'],
+  ['고양이', '강아지·토끼·양도 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b>에서 강아지 · 양 · 토끼를 펼쳐 <b>마릿수(+/−)</b>로 데려오거나 들여보냅니다. 같은 동물을 여러 마리 둘 수 있고, 모델은 지금 한 가지씩입니다(시바 · 하얀 양 · 흰 토끼). 혼자 산책하고, 앉고, 잠을 잡니다. 누르면 메뉴가 떠서 <b>쓰다듬기 · 사료(먹이) 주기 · 낮잠 재우기 · 가만히 있기</b>를 할 수 있습니다. 강아지는 사료를, 토끼는 당근이나 풀을, 양은 땅에 고개를 숙여 풀을 뜯습니다. 고양이처럼 끌어서 옮길 수 있고, 너무 오래(약 4초) 들고 있으면 버둥거리다 빠져나갑니다. 휙 던지면 날아갔다가 놀라서 한동안 마우스를 피해 다닙니다(10분 안에 자주 던질수록 30초 → 1분 → 2분 … 최대 10분, 동물마다 따로 셉니다). 레이저 · 장난감 · 사냥 구경 · 간식 · 츄르 · 캣타워는 고양이만 합니다.'],
   ['고양이', '다른 고양이로 바꾸거나 더 데려올 수 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b> → 고양이를 펼쳐 <b>마릿수(+/−)</b>로 데려옵니다. 고양이 · 강아지 · 양 · 토끼를 섞어 모두 5마리까지 함께 둘 수 있습니다. 나비 · 보리 · 두부 · 콩이 · 모모 중 고르고 품종(랙돌 · 노르웨이 숲(블루) · 브리티시 숏헤어(골든) · 스핑크스 · 사바나캣 · 코리안 숏헤어(고등어))과 털 무늬를 누르면 그 고양이가 바뀝니다. 고양이를 누르면 뜨는 메뉴에서는 바꾸지 않습니다. 함께 사는 고양이도 쉬고, 산책하고, 자고, 누르면 메뉴가 뜨고, 끌어 옮길 수 있습니다. 메뉴가 길면 메뉴 안에서 스크롤됩니다.'],
   ['고양이', '나비를 옮기거나 던질 수 있나요?', `나비를 꾹 눌러 끌면 들어 올려서 원하는 곳에 내려놓을 수 있습니다.
     끌다가 휙 놓으면 날아가서 화면 가장자리에 튕깁니다. 내려놓은 자리는 다음에 열 때도 기억합니다.
@@ -7523,6 +7539,11 @@ const PETS = {
   sheep:  { name: '양', model: '서퍽 양', speed: 32, walk: 'walk', run: 'walk', names: ['구름', '몽실', '메리', '양순', '솜사탕'], foods: ['grass'], feedLabel: '먹이 주기', chew: '우물우물', sounds: ['메에~', '음메에', '메에에', '메'],
     pal: { O: '#5a4c44', C: '#f6f0e2', S: '#e3d8c2', U: '#d3c6aa', W: '#fffdf6', F: '#3b302b', G: '#57483f', K: '#140f0d', L: '#ffffff', N: '#241b17', M: '#c98a8a', H: '#221a17', D: '#2e2521' } },
 };
+const PET_SCARED = {                               // 들었을 때·버둥댈 때·던져져 놀랐을 때·도망칠 때·진정했을 때 (동물 소리만)
+  dog:    { grab: ['깽?!', '왕?!', '멍?!'], struggle: ['깨갱!', '끼잉!', '깽깽!'], startle: ['깨갱!!', '깽!!', '왕!!'], flee: ['깽!', '으르릉…', '왕!'], calm: '끼잉…', rest: 'sit' },
+  rabbit: { grab: ['킁?!', '뿅?!', '끽?!'], struggle: ['끼익!', '쿵쿵!', '끽끽!'], startle: ['쿵!!', '끼익!!', '끽!!'], flee: ['쿵!', '킁!', '끽!'], calm: '킁킁…', rest: 'groom' },
+  sheep:  { grab: ['메엣?!', '매?!', '메?!'], struggle: ['메에에엣!', '매애앳!', '메에엣!'], startle: ['메에엣!!', '매애앳!!', '메엣!!'], flee: ['메엣!', '매앳!', '메에엣!'], calm: '메에…', rest: 'shake' },
+};
 /* ---------- 그리기 도구 ---------- */
 function pPaint(g) {
   const P = { g };
@@ -8014,12 +8035,14 @@ class Pet {
   wake() { this.el.classList.remove('sleep'); if (this.anim === 'sleep') this.anim = 'sit'; this.napUntil = 0; if (this.mode === 'sleep') this.mode = 'idle'; }
   /* 메뉴에서 부르는 것들(모든 동물 공통 4가지): 쓰다듬기 · 사료/먹이 주기 · 낮잠 재우기 · 가만히 있기(메뉴가 stay 를 바꾼다) */
   pet() {
+    if (this.mode === 'flee') return toast(`${this.name}, 아직 놀라서 다가오지 않아요`);
     if (this.mode === 'sleep') return this.wake();
     if (this.mode !== 'idle' && this.mode !== 'busy') return;
     this.stopMove(); this.mode = 'busy'; this.tip(pickOne(this.def.sounds)); this.hop();
     setTimeout(() => { this.tip('♡', 900); if (this.mode === 'busy') this.mode = 'idle'; }, 700);
   }
   async feed() {
+    if (this.mode === 'flee') return toast(`${this.name}, 아직 놀라서 다가오지 않아요`);
     this.wake();
     if (this.mode !== 'idle' && this.mode !== 'busy') return;
     this.stopMove(); this.mode = 'busy';
@@ -8038,7 +8061,7 @@ class Pet {
   async think() {
     while (this.alive) {
       await wait(1200 + Math.random() * 2200);
-      if (!this.alive || this.dragging || this.target || reduceMotion || this.mode === 'busy') continue;
+      if (!this.alive || this.dragging || this.target || reduceMotion || ['busy', 'drag', 'fly', 'flee'].includes(this.mode)) continue;
       if (menuOpen() && menuTarget === this) continue;                     // 메뉴를 보는 동안은 바라보고 있는다
       if (this.mode === 'sleep') { if (Date.now() < (this.napUntil || 0)) continue; this.wake(); }
       await this.doAct(pickWeighted(PET_DOINGS[this.kind].filter(([, a]) => !(this.stay && /walk|zoom|binky/.test(a)))));
@@ -8080,30 +8103,127 @@ class Pet {
       case 'shake': await hold('shake', 900); break;
     }
   }
+  /* 끌어서 옮기기·던지기: 고양이와 같다. 오래 들면 버둥대다 빠져나가고, 던지면 날아가 한동안 마우스를 피해 다닌다 */
   bind() {
     let down = null;
     this.el.addEventListener('pointerdown', e => {
-      if (e.button !== 0 || e.target.closest('#buddyMenu')) return;
-      e.preventDefault(); this.el.setPointerCapture(e.pointerId);
-      down = { x: e.clientX, y: e.clientY, ox: e.clientX - this.x, oy: e.clientY - this.y, moved: false };
+      if (e.button !== 0 || e.target.closest('#buddyMenu') || this.mode === 'fly') return;
+      e.preventDefault(); getSelection()?.removeAllRanges(); this.el.setPointerCapture(e.pointerId);
+      down = { id: e.pointerId, x: e.clientX, y: e.clientY, ox: e.clientX - this.x, oy: e.clientY - this.y, moved: false, pts: [] };
     });
     this.el.addEventListener('pointermove', e => {
-      if (!down) return;
+      if (!down || e.pointerId !== down.id) return;
       if (!down.moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 5) return;
       if (!down.moved) {
         if (this.mode === 'play') { down = null; return; }               // 놀이 중에는 끌지 않는다
-        down.moved = true; this.dragging = true; this.stopMove(); this.wake(); this.anim = 'stand'; this.el.classList.add('drag'); if (menuTarget === this) closeMenu();
+        const fromSleep = this.mode === 'sleep', S = PET_SCARED[this.kind];
+        down.moved = true; this.dragging = true; this.stopMove(); this.wake(); this.mode = 'drag'; this.anim = 'stand'; this.el.classList.add('drag'); if (menuTarget === this) closeMenu();
+        this.tip(pickOne(S.grab), 1300);
+        const d = down;
+        d.t1 = setTimeout(() => { if (down !== d) return; this.el.classList.add('struggle'); this.tip(pickOne(S.struggle), 1600); }, fromSleep ? 900 : 2500);
+        d.t2 = setTimeout(() => { if (down === d) this.escape(d); }, fromSleep ? 2600 : 4200);
       }
       this.x = e.clientX - down.ox; this.y = e.clientY - down.oy; this.place();
+      down.pts.push([e.clientX, e.clientY, performance.now()]); if (down.pts.length > 6) down.pts.shift();
     });
     const up = e => {
-      if (!down || e.target.closest?.('#buddyMenu')) { down = null; return; }
-      const moved = down.moved; down = null; this.dragging = false; this.el.classList.remove('drag');
-      if (moved) { this.anim = 'sit'; return; }
+      if (!down || e.pointerId !== down.id || e.target.closest?.('#buddyMenu')) { if (down && e.pointerId === down.id) down = null; return; }
+      const d = down; down = null; this.dragging = false;
+      clearTimeout(d.t1); clearTimeout(d.t2); this.el.classList.remove('drag', 'struggle');
+      try { this.el.releasePointerCapture(e.pointerId); } catch {}
+      if (d.moved) {
+        const now = performance.now(), pts = d.pts.filter(p => now - p[2] < 120);
+        let vx = 0, vy = 0;
+        if (pts.length >= 2) { const [x0, y0, t0] = pts[0], [x1, y1, t1] = pts[pts.length - 1], dt = Math.max(16, t1 - t0); vx = (x1 - x0) / dt; vy = (y1 - y0) / dt; }
+        if (Math.hypot(vx, vy) > 0.9 && !reduceMotion) this.fly(vx, vy, false); else this.land(false, false);
+        return;
+      }
       if (this.mode === 'sleep') { this.wake(); this.tip(pickOne(this.def.sounds)); return; }   // 자고 있으면 깨기만
       if (menuOpen() && menuTarget === this) closeMenu(); else openMenu(this);              // 누르면 고양이처럼 메뉴
     };
     this.el.addEventListener('pointerup', up); this.el.addEventListener('pointercancel', up);
+    this.cancelDrag = () => { down = null; };
+  }
+  escape(d) {                                       // 너무 오래 들고 있으면 손에서 빠져나와 커서 반대쪽으로 튄다
+    this.cancelDrag(); this.dragging = false; clearTimeout(d.t1);
+    try { this.el.releasePointerCapture(d.id); } catch {}
+    this.el.classList.remove('drag', 'struggle');
+    const c = this.center(), ax = cat.mx ?? c.x, ay = cat.my ?? c.y;
+    let dx = c.x - ax, dy = c.y - ay;
+    if (Math.hypot(dx, dy) < 8) { dx = Math.random() < 0.5 ? -1 : 1; dy = 0.4; }
+    const dd = Math.hypot(dx, dy);
+    this.tip(pickOne(PET_SCARED[this.kind].struggle), 1300);
+    if (reduceMotion) return this.land(false, true);
+    this.fly(dx / dd * 1.5, dy / dd * 1.5 + 0.25, true);
+  }
+  center() { return { x: this.x + 60, y: this.y + 50 }; }
+  fly(vx, vy, escaped) {
+    this.mode = 'fly'; this.anim = 'stand'; this.el.classList.add('fly');
+    let last = performance.now(); const started = last;
+    const step = now => {
+      if (!this.alive) return;
+      const dt = Math.min(40, now - last); last = now;
+      const b = petBounds();
+      let x = this.x + vx * dt, y = this.y + vy * dt;
+      if (x < b.x0 || x > b.x1) { vx = -vx * 0.7; x = Math.max(b.x0, Math.min(b.x1, x)); }
+      if (y < b.y0 || y > b.y1) { vy = -vy * 0.7; y = Math.max(b.y0, Math.min(b.y1, y)); }
+      const f = Math.pow(0.93, dt / 16); vx *= f; vy *= f;
+      this.x = x; this.y = y; if (Math.abs(vx) > 0.05) this.face = vx < 0; this.place();
+      if (Math.hypot(vx, vy) > 0.06 && now - started < 2200) requestAnimationFrame(step);
+      else { this.el.classList.remove('fly'); this.land(true, escaped); }
+    };
+    requestAnimationFrame(step);
+  }
+  async land(flew, escaped) {
+    this.mode = 'busy'; cat.lastInput = Date.now();
+    this.el.classList.add('hop'); this.anim = 'stand'; await wait(250); this.el.classList.remove('hop');
+    if (!this.alive || this.mode !== 'busy') return;
+    const S = PET_SCARED[this.kind];
+    if (escaped) {                                  // 빠져나온 뒤: 한 번 놀라고 커서 반대쪽으로 달아난다
+      this.tip(pickOne(S.flee), 1300);
+      if (!this.stay && !reduceMotion) {
+        const c = this.center(), ax = cat.mx ?? c.x, ay = cat.my ?? c.y, dx = c.x - ax, dy = c.y - ay, d = Math.hypot(dx, dy) || 1;
+        await this.walkTo(this.x + dx / d * 220, this.y + dy / d * 140, this.def.speed * 3.5, true);
+      }
+      if (this.mode === 'busy') { this.anim = S.rest; await wait(1300); }
+      if (this.mode === 'busy') { this.anim = 'sit'; this.mode = 'idle'; }
+      return;
+    }
+    if (flew && !reduceMotion) return this.flee(this.fleeMs());
+    this.tip(pickOne(this.def.sounds)); this.anim = 'sit'; this.mode = 'idle';
+  }
+  fleeMs() {                                        // 최근 10분 안에 던진 횟수만큼 길어진다(30초 → 1분 → 2분 → 4분 → 8분, 최대 10분). 동물마다 따로 센다
+    const now = Date.now();
+    this.throwLog = [...(this.throwLog || []).filter(t => now - t < 10 * 60000), now];
+    return Math.min(10 * 60000, 30000 * 2 ** (this.throwLog.length - 1));
+  }
+  async flee(ms) {                                  // 던지면 놀라서 한동안 마우스를 피해 다닌다
+    const S = PET_SCARED[this.kind];
+    this.mode = 'flee'; this.anim = 'stand';
+    const end = Date.now() + ms;
+    this.tip(pickOne(S.startle), 1500); this.hop(); await wait(700);
+    if (ms > 30000) toast(`${this.name}, 많이 놀랐어요. ${Math.round(ms / 60000 * 10) / 10}분 동안 마우스를 피해 다녀요`);
+    let lastTip = 0;
+    while (this.alive && Date.now() < end && this.mode === 'flee') {
+      const c = this.center(), W = document.documentElement.clientWidth, H = innerHeight;
+      if (cat.mx != null && Math.hypot(c.x - cat.mx, c.y - cat.my) < 280) {
+        const dx = c.x - cat.mx, dy = c.y - cat.my, d = Math.hypot(dx, dy) || 1, b = petBounds();
+        let tx = this.x + dx / d * 320, ty = this.y + dy / d * 220;
+        if (tx < b.x0 + 20 || tx > b.x1 - 20) ty += (c.y > H / 2 ? -1 : 1) * 280;     // 구석에 몰리면 옆으로 빠져나간다
+        if (ty < b.y0 + 20 || ty > b.y1 - 20) tx += (c.x > W / 2 ? -1 : 1) * 380;
+        tx = Math.max(b.x0, Math.min(b.x1, tx)); ty = Math.max(b.y0, Math.min(b.y1, ty));
+        if (Date.now() - lastTip > 4000) { lastTip = Date.now(); this.tip(pickOne(S.flee), 1000); }
+        await Promise.race([this.walkTo(tx, ty, this.def.speed * 3.5, true), wait(650)]);
+      } else {
+        if (!this.target) { this.anim = 'stand'; if (cat.mx != null) { this.face = cat.mx < c.x; this.place(); } }   // 멀찍이서 커서 쪽을 경계한다
+        await wait(250);
+      }
+    }
+    if (this.mode === 'flee') {
+      this.stopMove(); this.tip(S.calm, 1400);
+      this.anim = S.rest; await wait(1200);
+      if (this.mode === 'flee') { this.anim = 'sit'; this.mode = 'idle'; }
+    }
   }
   destroy() { if (menuTarget === this) { closeMenu(); buddyWrap.appendChild(buddyMenu); menuTarget = null; } this.alive = false; this.stopMove(); this.el.remove(); }
 }
@@ -8485,6 +8605,57 @@ $('#tabBar .tabs').addEventListener('auxclick', e => {
   if (t && e.button === 1) { e.preventDefault(); closeTab(+t.dataset.i); }
 });
 $('#tabBar .tabs').addEventListener('mousedown', e => { if (e.button === 1) e.preventDefault(); });   // 가운데 버튼 자동 스크롤 막기
+
+/* 탭 우클릭 메뉴: 누른 탭을 기준으로 이 탭 · 이 탭 말고 모두 · 왼쪽 · 오른쪽 · 모두 닫기 */
+function closeTabsWhere(drop, keep) {                // drop(i) 이 참인 탭을 한 번에 닫는다. 지금 탭이 닫히면 keep 번째 탭으로 간다
+  const gone = TABS.list.map((_, i) => i).filter(drop);
+  if (!gone.length) return;
+  const activeGone = gone.includes(TABS.i);
+  if (activeGone && !leaveEdit()) return;
+  if (activeGone) saveReadPos();
+  const was = TABS.list[TABS.i], next = TABS.list[keep];
+  TABS.list = TABS.list.filter((_, i) => !drop(i));
+  if (!TABS.list.length) { TABS.list = [newTabObj()]; TABS.i = 0; showEmpty(); saveTabs(); return; }
+  if (!activeGone) { TABS.i = TABS.list.indexOf(was); drawTabs(); saveTabs(); return; }
+  TABS.i = Math.max(0, TABS.list.indexOf(next));
+  openTab(curTab()).then(saveTabs);
+}
+const tabMenu = $('#tabMenu');
+let tabMenuAt = -1;
+const hideTabMenu = () => { tabMenu.classList.remove('show'); tabMenuAt = -1; };
+$('#tabBar .tabs').addEventListener('contextmenu', e => {
+  const t = e.target.closest('.tab');
+  if (!t) return;
+  e.preventDefault();
+  const j = +t.dataset.i, n = TABS.list.length;
+  tabMenuAt = j;
+  tabMenu.querySelector('[data-a="others"]').disabled = n < 2;
+  tabMenu.querySelector('[data-a="left"]').disabled = j === 0;
+  tabMenu.querySelector('[data-a="right"]').disabled = j >= n - 1;
+  tabMenu.classList.add('show');
+  const w = tabMenu.offsetWidth, h = tabMenu.offsetHeight;
+  tabMenu.style.left = Math.max(4, Math.min(e.clientX, innerWidth - w - 4)) + 'px';
+  tabMenu.style.top = Math.max(4, Math.min(e.clientY, innerHeight - h - 4)) + 'px';
+});
+tabMenu.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b || b.disabled) return;
+  const j = tabMenuAt;
+  hideTabMenu();
+  if (!TABS.list[j]) return;
+  ({
+    this: () => closeTab(j),
+    others: () => closeTabsWhere(i => i !== j, j),
+    left: () => closeTabsWhere(i => i < j, j),
+    right: () => closeTabsWhere(i => i > j, j),
+    all: () => closeTabsWhere(() => true, 0),
+  })[b.dataset.a]();
+});
+addEventListener('pointerdown', e => { if (tabMenu.classList.contains('show') && !tabMenu.contains(e.target)) hideTabMenu(); }, true);
+addEventListener('keydown', e => { if (e.key === 'Escape' && tabMenu.classList.contains('show')) { e.stopPropagation(); hideTabMenu(); } }, true);
+addEventListener('blur', hideTabMenu);
+addEventListener('resize', hideTabMenu);
+$('#tabBar .tabs').addEventListener('scroll', hideTabMenu);
 
 /* ---------- 즐겨찾기 ---------- */
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>';

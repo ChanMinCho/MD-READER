@@ -607,8 +607,9 @@ html[data-theme="dark"] .comp .shadow { background: rgba(0,0,0,.5); }
 .pet.face-l canvas { transform: scaleX(-1); }
 .pet-dog .pet-move { height: 150px; bottom: -12px; }                                    /* 시바: 32x32 도트를 3배로 */
 .pet-dog canvas { width: 144px; height: 150px; margin-left: -12px; }    /* 48칸 폭·50칸 높이(구르기 그림까지). 그림은 가운데·바닥선에 */
-.pet-parrot .pet-move { height: 84px; }                                 /* 앵무새: 24x27 도트를 3배로 */
-.pet-parrot canvas { width: 72px; height: 81px; margin-left: 24px; }
+.pet-parrot .pet-move { height: 90px; }                                 /* 앵무새: 사랑앵무 24x27 도트 3배(81px) · 코뉴어 45x45 도트 2배(90px) */
+.pet-parrot canvas { width: 132px; height: 90px; margin-left: 0; }   /* 44칸 캔버스(날개·숙인 고개가 들어갈 자리), 새는 왼쪽 8칸 띄워서 */
+.pet-parrot.face-l canvas { transform-origin: 60px 50%; }             /* 뒤집어도 새 자리(24~96px)가 그대로 */
 .pet.drag { cursor: grabbing; }
 .pet.drag .pet-move { animation: cat-dangle .6s ease-in-out infinite alternate; }
 .pet.drag.struggle .pet-move { animation: cat-wiggle .16s ease-in-out infinite alternate; }   /* 오래 들고 있으면 버둥거린다 */
@@ -3186,7 +3187,7 @@ const FAQ = [
     <li>여러 마리면 서로 다가가 장난치고, 우다다 쫓아다니고, 서로 핥아 주고, 나란히 그루밍해요. 걷다가 부딪히면 넘어지고, 잘 시간이면 곁으로 모여 같이 자요.</li>
     <li>간식은 1분에 3번까지 먹습니다.</li>
     <li>놀아 줄수록 친밀도가 오르고 메뉴 위 막대가 찹니다.</li></ul>`],
-  ['고양이', '강아지·앵무새도 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b>에서 강아지 · 앵무새를 펼쳐 <b>마릿수(+/−)</b>로 데려오거나 들여보냅니다. 같은 동물을 여러 마리 둘 수 있고, 앵무새는 사랑앵무 한 가지입니다. 혼자 산책하고, 앉고, 잠을 잡니다. 누르면 메뉴가 떠서 <b>쓰다듬기 · 사료(먹이) 주기 · 낮잠 재우기 · 가만히 있기</b>를 할 수 있습니다. 강아지는 메뉴의 명령 <b>멈춰 · 앉아 · 손 · 엎드려</b>를 알아듣고 몇 초 동안 그 자세를 지킵니다. <b>뼈다귀 던지기</b>로 바닥에 뼈다귀를 꺼내 두고, 마우스로 끌어 휙 던지면 물어서 마우스 포인터 쪽으로 가져옵니다. <b>터그 놀이</b>를 고르면 강아지가 줄을 물고, 줄 끝 손잡이를 마우스로 당기면 버티다 끌려오고, 놓으면 강아지가 이겨 줄을 물고 달아납니다. 강아지는 평소 마우스 포인터를 따라다니고(던져서 겁먹은 동안은 빼고), 쓰다듬기·사료·물어오기로 친밀도가 오르면 꼬리 흔들기(Lv.3) · 앉아서 손 내밀기(Lv.5) · 뛰어올라 반기기(Lv.7) · 빙글빙글(Lv.9)로 반깁니다. 강아지는 시바 한 가지이고, 펫 바꾸기의 <b>털 무늬</b>에서 털색(레드 · 블랙탄 · 참깨 · 크림)을 고릅니다. 고양이와 같이 있으면 우다다 · 코 인사 · 핥아 주기 · 그루밍 · 낮잠을 하고, 가끔 짖어서 고양이를 쫓거나 고양이에게 맞고 울며 달아납니다. 강아지는 사료를, 앵무새는 모이를 콕콕 쪼아 먹습니다. 고양이처럼 끌어서 옮길 수 있고, 너무 오래(약 4초) 들고 있으면 버둥거리다 빠져나갑니다. 휙 던지면 날아갔다가 놀라서 한동안 마우스를 피해 다닙니다(10분 안에 자주 던질수록 30초 → 1분 → 2분 … 최대 10분, 동물마다 따로 셉니다). 레이저 · 장난감 · 사냥 구경 · 간식 · 츄르 · 캣타워는 고양이만 합니다.'],
+  ['고양이', '강아지·앵무새도 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b>에서 강아지 · 앵무새를 펼쳐 <b>마릿수(+/−)</b>로 데려오거나 들여보냅니다. 같은 동물을 여러 마리 둘 수 있고, 앵무새는 사랑앵무 · 코뉴어 두 가지입니다. 혼자 산책하고, 앉고, 잠을 잡니다. 누르면 메뉴가 떠서 <b>쓰다듬기 · 사료(먹이) 주기 · 낮잠 재우기 · 가만히 있기</b>를 할 수 있습니다. 강아지는 메뉴의 명령 <b>멈춰 · 앉아 · 손 · 엎드려</b>를 알아듣고 몇 초 동안 그 자세를 지킵니다. <b>뼈다귀 던지기</b>로 바닥에 뼈다귀를 꺼내 두고, 마우스로 끌어 휙 던지면 물어서 마우스 포인터 쪽으로 가져옵니다. <b>터그 놀이</b>를 고르면 강아지가 줄을 물고, 줄 끝 손잡이를 마우스로 당기면 버티다 끌려오고, 놓으면 강아지가 이겨 줄을 물고 달아납니다. 강아지는 평소 마우스 포인터를 따라다니고(던져서 겁먹은 동안은 빼고), 쓰다듬기·사료·물어오기로 친밀도가 오르면 꼬리 흔들기(Lv.3) · 앉아서 손 내밀기(Lv.5) · 뛰어올라 반기기(Lv.7) · 빙글빙글(Lv.9)로 반깁니다. 강아지는 시바 한 가지이고, 펫 바꾸기의 <b>털 무늬</b>에서 털색(레드 · 블랙탄 · 참깨 · 크림)을 고릅니다. 고양이와 같이 있으면 우다다 · 코 인사 · 핥아 주기 · 그루밍 · 낮잠을 하고, 가끔 짖어서 고양이를 쫓거나 고양이에게 맞고 울며 달아납니다. 강아지는 사료를 먹고, 앵무새는 몸을 숙여 모이를 콕콕 쪼아 먹습니다. 앵무새는 날갯짓하며 화면 여기저기로 날아다니고, 가끔 바닥에서 모이를 쪼습니다. 고양이처럼 끌어서 옮길 수 있고, 너무 오래(약 4초) 들고 있으면 버둥거리다 빠져나갑니다. 휙 던지면 날아갔다가 놀라서 한동안 마우스를 피해 다닙니다(10분 안에 자주 던질수록 30초 → 1분 → 2분 … 최대 10분, 동물마다 따로 셉니다). 레이저 · 장난감 · 사냥 구경 · 간식 · 츄르 · 캣타워는 고양이만 합니다.'],
   ['고양이', '다른 고양이로 바꾸거나 더 데려올 수 있나요?', '오른쪽 위 메뉴(≡) → <b>펫 바꾸기</b> → 고양이를 펼쳐 <b>마릿수(+/−)</b>로 데려옵니다. 고양이 · 강아지 · 앵무새를 섞어 모두 5마리까지 함께 둘 수 있습니다. 나비 · 보리 · 두부 · 콩이 · 모모 중 고르고 품종(랙돌 · 노르웨이 숲(블루) · 브리티시 숏헤어(골든) · 스핑크스 · 사바나캣 · 코리안 숏헤어(고등어))과 털 무늬를 누르면 그 고양이가 바뀝니다. 고양이를 누르면 뜨는 메뉴에서는 바꾸지 않습니다. 함께 사는 고양이도 쉬고, 산책하고, 자고, 누르면 메뉴가 뜨고, 끌어 옮길 수 있습니다. 메뉴가 길면 메뉴 안에서 스크롤됩니다.'],
   ['고양이', '나비를 옮기거나 던질 수 있나요?', `나비를 꾹 눌러 끌면 들어 올려서 원하는 곳에 내려놓을 수 있습니다.
     끌다가 휙 놓으면 날아가서 화면 가장자리에 튕깁니다. 내려놓은 자리는 다음에 열 때도 기억합니다.
@@ -7765,7 +7766,7 @@ petMenu.addEventListener('click', e => {
 const PETS = {
   dog:    { name: '강아지', models: ['시바'], speed: 70, walk: 'walk', run: 'run', names: ['초코', '바둑', '몽이', '해피', '뭉치'], foods: ['kibble'], feedLabel: '사료 주기', chew: '냠냠', sounds: ['멍!', '왈왈!', '멍멍', '킁킁', '왈!'],
     pal: { O: '#000000', C: '#f7b635', W: '#ffffff', S: '#b46e34', V: '#b895d0', I: '#fad281', D: '#b35b00', E: '#b67d6e', X: '#a24b14', U: '#c21e1c', T: '#f2423a', Y: '#f5a000', Z: '#da7b06', A: '#8fd3ff', B: '#f3e3bb', b: '#c9a96a', P: '#ff9eb5', R: '#d9443b' } },
-  parrot: { name: '앵무새', models: ['사랑앵무'], speed: 48, walk: 'walk', run: 'run', names: ['초록이', '콩이', '짹짹이', '삐삐', '연두'], foods: ['seed'], feedLabel: '모이 주기', chew: '콕콕', sounds: ['짹짹', '삐약', '꺅!', '삑삑', '휘익~'], },
+  parrot: { name: '앵무새', models: ['사랑앵무', '코뉴어'], speed: 48, walk: 'walk', run: 'run', names: ['초록이', '콩이', '짹짹이', '삐삐', '연두'], foods: ['seed'], feedLabel: '모이 주기', chew: '콕콕', sounds: ['짹짹', '삐약', '꺅!', '삑삑', '휘익~'], },
 };
 const PET_SCARED = {                               // 들었을 때·버둥댈 때·던져져 놀랐을 때·도망칠 때·진정했을 때 (동물 소리만)
   dog:    { grab: ['멍?', '헥헥', '왈~'], struggle: ['끼잉!', '낑낑!', '깽!'], startle: ['깨갱!!', '깽!!', '끼잉!!'], flee: ['끼잉…', '낑낑…', '흐잉…'], calm: '킁…', rest: 'sit' },   // 들면 편안, 던지면 운다
@@ -8412,7 +8413,7 @@ function dogSpritePack(vi, ci) {
 }
 
 /* ===================== 앵무새 ===================== */
-/* 통통한 알 모양 앵무새(사랑앵무) 도트(24x27). 한 칸을 화면 3px 로 */
+/* 통통한 알 모양 앵무새(사랑앵무) 도트(24x27). 한 칸을 화면 3px 로. 코뉴어는 아래 CONURE_MAP */
 const PARROT_MAP = [
   '.........OOOOOO.........',
   '.......OOFFFFFFOO.......',
@@ -8443,33 +8444,133 @@ const PARROT_MAP = [
   '.........OO.OO..........',
 ];
 const PARROT_PAL = { B: '#7cc242', G: '#5c9a2e', g: '#2f5e1a', F: '#f6e04a', C: '#3b6fd1', H: '#f2c08a', h: '#c98f5c', T: '#3e7fd0', P: '#b9a7c9' };   // 사랑앵무
-function parrotLayer(keep, edit) {                 // keep(y, x): 남길 칸. edit(g): 눈 감기·털 부풀리기
-  const g = PARROT_MAP.map(r => r.split(''));
+/* 그린칙 코뉴어 도트(24x27, 사랑앵무와 같은 크기). 큰 머리·큰 눈·볼터치, 왼쪽으로 겹친 날개(끝에 파란 깃), 회색 비늘 가슴·빨간 배, 밤색 꼬리 */
+const CONURE_MAP = [
+  '..........OOOOOOOO......',
+  '........OOddddddddOO....',
+  '.......OdddDDDDDDDDDO...',
+  '......OddDDDDDDDDDDDDO..',
+  '......OdDDDDDDDDDDDDDO..',
+  '.....OdDDDDKKKDDDDDDDO..',
+  '.....ODDDDDKKLDDDDOqQO..',
+  '.....ODDDDDKKKDDDDOqQQO.',
+  '.....ONNDDDKKKDDDNOQQQO.',
+  '.....ONNZZNNNNNNNNOQQO..',
+  '.....ONNZZNNNNNNNNNOO...',
+  '....OONNNNNNNNNNNNNNO...',
+  '..OOIIIIGAAAAAAAAAAAnO..',
+  '.OIIIIIIIGAaAAaAAaAAAnO.',
+  '.OBIIIIIIIGAAaAAaAAaAnO.',
+  'OBBBIIIIIIIGAaAAaAAaAnO.',
+  'OGBBBBIIIIIGAMMMMMMAAnO.',
+  'OUGBBBBBIIIGMMmMMMmMBnO.',
+  'OUUGGBBBBBIGMMMMMMMMBnO.',
+  '.OUUGGGBBBBBGMMMmMMBBnO.',
+  '..OUUGGGGGGGBMMMMBBBnO..',
+  '.OTOOUUGGGGGBBBBBBBBnO..',
+  'OTTO.OOOOOOOGBBBBBBnO...',
+  'OTO........OOOOOOOO.....',
+  'OO........OFO....OFO....',
+  '.........OFFFO..OFFFO...',
+  '.........OOOOO..OOOOO...',
+];
+const CONURE_PAL = { D: '#8a7d75', d: '#a89b92', N: '#8cc768', Z: '#f0a3a0', R: '#f6f2ea', Q: '#4a4646', q: '#7a7572', A: '#dcd6cc', a: '#aaa298', M: '#e06a5a', m: '#b8473b', B: '#7cc25a', G: '#55963c', I: '#b8e08a', U: '#5b86d6', T: '#a0463a', F: '#8f8a86', n: '#6fae4e' };
+/* 앵무새 모델(PETS.parrot.models 순서). px: 한 칸 화면 크기, cw·ox: 캔버스 넓이와 새를 띄우는 칸 수(날개·숙인 고개 자리),
+   foot·footY: 따로 들어 걷는 발 칸, tuckY: 날 때 접는 발 줄, wing: 날개 칸(k 는 날개 옮기는 칸 배수),
+   head: 모이 쪼기 때 숙이는 머리(y1·x0 머리 범위, cx·cy 돌리는 가운데, deg 각도, dx·dy 내려가는 칸, fill 목 색), lean: 몸을 앞으로 기울이는 각도,
+   shut: 눈 감은 그림, fluff: 털을 부풀릴 때 한 칸 넓히는 몸 색 */
+const PARROT_MODELS = [
+  { map: PARROT_MAP, pal: PARROT_PAL, px: 3, cw: 44, ox: 8, foot: [[8, 10], [11, 14]], footY: 25, tuckY: 24, wing: { y0: 14, y1: 21, x0: 2, x1: 9, set: 'Gg', under: 'BGg', k: 1 },
+    head: { y1: 13, x0: 0, cx: 13, cy: 7, deg: 40, dx: 5, dy: 11, nb: 4, nx: 9, fill: 'F' }, lean: 14, fluff: 'BG',
+    shut: g => { for (let y = 5; y <= 8; y++) for (let x = 14; x <= 17; x++) if ('OKL'.includes(g[y][x]) && !(y === 5 && x === 17)) g[y][x] = 'F'; g[7][15] = g[7][16] = g[7][17] = 'K'; } },
+  { map: CONURE_MAP, pal: CONURE_PAL, px: 3, cw: 44, ox: 8, foot: [[9, 13], [16, 20]], footY: 25, tuckY: 24, wing: { y0: 12, y1: 21, x0: 0, x1: 11, set: 'IBGU', under: 'IBGUn', k: 1 },
+    head: { y1: 11, x0: 0, cx: 13, cy: 6, deg: 40, dx: 5, dy: 11, nb: 3, nx: 9, fill: 'N' }, lean: 14, fluff: 'BGIn',
+    shut: g => { for (let y = 5; y <= 8; y++) for (let x = 11; x <= 13; x++) if ('KL'.includes(g[y][x])) g[y][x] = g[y][14]; g[7][11] = g[7][12] = g[7][13] = 'K'; } },
+];
+function parrotLayer(md, keep, edit) {             // md: 모델. keep(y, x): 남길 칸. edit(g): 눈 감기·털 부풀리기
+  const g = md.map.map(r => typeof r === 'string' ? r.split('') : r.slice());
   edit?.(g);
-  const pal = { O: '#000000', K: '#000000', L: '#ffffff', ...PARROT_PAL };
-  const cv = document.createElement('canvas'); cv.width = 24; cv.height = 27;
+  const pal = { O: '#000000', K: '#000000', L: '#ffffff', ...md.pal };
+  const cv = document.createElement('canvas'); cv.width = g[0].length; cv.height = g.length;
   const x = cv.getContext('2d');
   g.forEach((r, y) => r.forEach((c, X) => { if (c !== '.' && pal[c] && keep(y, X)) { x.fillStyle = pal[c]; x.fillRect(X, y, 1, 1); } }));
   return cv;
 }
-const parrotShut = g => { for (let y = 5; y <= 8; y++) for (let x = 14; x <= 17; x++) if ('OKL'.includes(g[y][x]) && !(y === 5 && x === 17)) g[y][x] = 'F'; g[7][15] = g[7][16] = g[7][17] = 'K'; };
-const parrotFluff = g => { for (const r of g) { const i = r.indexOf('O'); if (i > 1 && 'BG'.includes(r[i + 1])) { r[i - 1] = 'O'; r[i] = r[i + 1]; } } };   // 털 부풀리기(몸이 한 칸 넓어짐)
+const parrotFluff = (g, fluff) => { for (const r of g) { const i = r.indexOf('O'); if (i > 1 && fluff.includes(r[i + 1])) { r[i - 1] = 'O'; r[i] = r[i + 1]; } } };   // 털 부풀리기(몸이 한 칸 넓어짐)
+/* 날기·모이 쪼기 그림은 넓은 격자(md.cw 칸, 새는 md.ox 칸 띄움)에서 만든다.
+   날기: 접은 날개 자리를 몸 색으로 메우고, 날개 칸을 위(뒤집어 머리 뒤로)·가운데(반 높이)·아래로 옮겨 찍고 빈 칸 쪽에 외곽선을 두른다. 발은 접는다.
+   쪼기: 몸은 조금만 앞으로 기울이고, 머리를 떼어 아래로 숙여 그릇 앞까지 내린다. 머리 아랫부분 앞쪽(nb 줄, nx 칸부터)이 지나간 빈 자리를 목 색으로 메워 목이 늘어난 것처럼 잇는다.
+   돌리기는 Scale2x 3번(8배)으로 키워 돌린 뒤 칸 가운데 값만 다시 뽑는 RotSprite 방식. 발은 그대로 */
+const parrotWide = (md, rows) => rows.map(r => [...'.'.repeat(md.ox), ...r, ...'.'.repeat(md.cw - md.ox - r.length)]);
+const parrotOutline = g => { const H = g.length, W = g[0].length, add = [];
+  g.forEach((r, y) => r.forEach((c, x) => { if (c !== '.') return;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => { const v = g[y + a]?.[x + b]; return v && v !== '.' && v !== 'O'; })) add.push([y, x]); }));
+  add.forEach(([y, x]) => { g[y][x] = 'O'; }); void H; void W; return g; };
+function parrotScale2x(g) {
+  const H = g.length, W = g[0].length, at = (y, x) => g[Math.max(0, Math.min(H - 1, y))][Math.max(0, Math.min(W - 1, x))], o = [];
+  for (let y = 0; y < H; y++) { const a = [], b = [];
+    for (let x = 0; x < W; x++) { const E = g[y][x], B = at(y - 1, x), D = at(y, x - 1), F = at(y, x + 1), Hh = at(y + 1, x);
+      a.push(D === B && B !== F && D !== Hh ? D : E, B === F && B !== D && F !== Hh ? F : E);
+      b.push(D === Hh && D !== B && Hh !== F ? D : E, Hh === F && D !== Hh && B !== F ? F : E); }
+    o.push(a, b); }
+  return o;
+}
+function parrotRotate(g, deg, px, py) {             // 시계 방향(앞으로 숙이기). px, py: 축(칸 좌표)
+  if (!deg) return g.map(r => r.slice());
+  const big = parrotScale2x(parrotScale2x(parrotScale2x(g))), S = 8, a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+  return g.map((r, y) => r.map((_, x) => { const dx = x + 0.5 - px, dy = y + 0.5 - py;
+    const sx = Math.floor((px + dx * c + dy * s) * S), sy = Math.floor((py - dx * s + dy * c) * S);
+    return sy >= 0 && sy < big.length && sx >= 0 && sx < big[0].length ? big[sy][sx] : '.'; }));
+}
+function parrotFlyGrid(md, pose) {                 // pose: 0 위 · 1 가운데 · 2 아래
+  const w = md.wing, k = w.k, g = parrotWide(md, md.map.map(r => r.split(''))), cells = [], OXc = md.ox;
+  for (let y = w.y0; y <= w.y1; y++) for (let x = w.x0; x <= w.x1; x++) { const c = md.map[y][x]; if (w.set.includes(c)) { cells.push([y, x, c]); g[y][x + OXc] = w.set[0]; } }
+  const lo = Math.min(...md.foot.map(f => f[0])) - 1, hi = Math.max(...md.foot.map(f => f[1])) + 1;
+  for (let y = md.tuckY; y < g.length; y++) for (let x = lo; x <= hi; x++) g[y][x + OXc] = '.';   // 발 접기
+  const put = [];
+  cells.forEach(([y, x, c]) => { const r = y - w.y0;
+    if (pose === 0) put.push([w.y0 + k - r, x - 5 * k, c]);
+    else if (pose === 1) { if (r % 2 === 0) put.push([w.y0 + k + r / 2, x - 2 * k, c]); }
+    else put.push([y + 2 * k, x - k, c]); });
+  const mine = new Set();
+  put.forEach(([y, x, c]) => { const X = x + OXc; if (y < 0 || y >= g.length || X < 0) return; const t = g[y][X];
+    if (t === '.' || w.under.includes(t) || (t === 'O' && y >= w.y0) || pose === 2) { g[y][X] = c; mine.add(y + ',' + X); } });
+  mine.forEach(key => { const [y, X] = key.split(',').map(Number);
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([a, b]) => { const yy = y + a, xx = X + b; if (yy >= 0 && yy < g.length && xx >= 0 && xx < md.cw && g[yy][xx] === '.') g[yy][xx] = 'O'; }); });
+  return g;
+}
+function parrotPeckGrid(md, t, eye) {               // t: 0 서 있음 ~ 1 머리를 다 숙임
+  const h = md.head, src = md.map.map(r => r.split('')); if (eye) md.shut(src);
+  const wide = parrotWide(md, src), H = wide.length, W = md.cw, blank = () => wide.map(r => r.map(() => '.'));
+  const isFoot = (y, x) => y >= md.footY && md.foot.some(([a, b]) => x - md.ox >= a && x - md.ox <= b);
+  const head = blank(), body = blank(), neck = blank();
+  wide.forEach((r, y) => r.forEach((c, x) => { if (c === '.' || isFoot(y, x)) return; const hd = y <= h.y1 && x - md.ox >= h.x0; (hd ? head : body)[y][x] = c; if (hd && y > h.y1 - h.nb && x - md.ox >= h.nx) neck[y][x] = c; }));
+  const out = parrotRotate(body, md.lean * t, md.ox + (md.foot[0][0] + md.foot[1][1] + 1) / 2, md.footY);
+  const rot = g => parrotRotate(g, h.deg * t, md.ox + h.cx, h.cy), hr = rot(head), nr = neck, DX = h.dx * t, DY = h.dy * t;
+  const paste = (ox, oy, fill) => (fill ? nr : hr).forEach((r, y) => r.forEach((c, x) => { const Y = y + oy, X = x + ox; if (c !== '.' && Y >= 0 && Y < H && X >= 0 && X < W && (!fill || '.O'.includes(out[Y][X]))) out[Y][X] = fill || c; }));   // 목은 빈 칸에만(몸 앞가슴은 그대로)
+  const n = Math.ceil(Math.max(Math.abs(DX), Math.abs(DY)));
+  for (let i = 0; i < n; i++) paste(Math.round(DX * i / n), Math.round(DY * i / n), h.fill);   // 목: 머리 아랫부분이 지나간 자리
+  paste(Math.round(DX), Math.round(DY));
+  return parrotOutline(out);
+}
 /* 앵무새도 몸과 두 발을 나눠 화면 1px 단위로 움직여 초당 60장으로 잇는다. 몸은 아래로만 앉고 발은 위로만 든다 */
-const PARROT_FOOT = [[8, 10], [11, 14]], PARROT_PX = 3;
-function parrotSpritePack() {
-  const W = 24 * PARROT_PX, H = 27 * PARROT_PX;
-  const foot = (y, x) => y >= 25 && PARROT_FOOT.some(([a, b]) => x >= a && x <= b);
+function parrotSpritePack(vi = 0) {
+  const md = PARROT_MODELS[vi] || PARROT_MODELS[0], P = md.px, W = md.cw * P, H = md.map.length * P, BW = md.map[0].length * P, OX = md.ox * P;
+  const foot = (y, x) => y >= md.footY && md.foot.some(([a, b]) => x >= a && x <= b);
   const L = {
-    body: [parrotLayer((y, x) => !foot(y, x)), parrotLayer((y, x) => !foot(y, x), parrotShut), parrotLayer((y, x) => !foot(y, x), g => { parrotShut(g); parrotFluff(g); })],
-    feet: PARROT_FOOT.map(([a, b]) => parrotLayer((y, x) => y >= 25 && x >= a && x <= b)),
+    body: [parrotLayer(md, (y, x) => !foot(y, x)), parrotLayer(md, (y, x) => !foot(y, x), md.shut), parrotLayer(md, (y, x) => !foot(y, x), g => { md.shut(g); parrotFluff(g, md.fluff); })],
+    feet: md.foot.map(([a, b]) => parrotLayer(md, (y, x) => y >= md.footY && x >= a && x <= b)),
   };
-  const compose = ({ by = 0, lift = [0, 0], eye = 0 }) => {
+  const compose = ({ by = 0, lift = [0, 0], eye = 0, grid = null, nofeet = false }) => {
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     const x = cv.getContext('2d'); x.imageSmoothingEnabled = false;
-    x.drawImage(L.body[eye], 0, Math.round(by), W, H);
-    L.feet.forEach((f, i) => x.drawImage(f, 0, -Math.round(Math.max(0, lift[i])), W, H));
+    if (grid) x.drawImage(grid, 0, Math.round(by), W, H);
+    else x.drawImage(L.body[eye], OX, Math.round(by), BW, H);
+    if (!nofeet) L.feet.forEach((f, i) => x.drawImage(f, OX, -Math.round(Math.max(0, lift[i])), BW, H));
     return cv;
   };
+  const fly = [0, 1, 2].map(i => parrotLayer({ ...md, map: parrotFlyGrid(md, i) }, () => true));
+  const peckCache = {}, peck = (t, eye) => peckCache[t + '_' + eye] ||= parrotLayer({ ...md, map: parrotPeckGrid(md, t / 20, eye) }, () => true);   // t: 0~20
   const S = Math.sin, TAU = Math.PI * 2, breathe = (p, a) => a * (1 - Math.cos(TAU * p)) / 2, blink = (p, at) => p >= at && p < at + 0.04 ? 1 : 0;
   const anim = (secs, n, fn) => { let baked = null; return { fps: n / secs, n, get frames() { return baked ||= Array.from({ length: n }, (_, i) => compose(fn(i / n))); } }; };
   const step = (p, h) => [Math.max(0, S(TAU * p)) * h, Math.max(0, -S(TAU * p)) * h];
@@ -8482,8 +8583,10 @@ function parrotSpritePack() {
     hop:   anim(0.5, 30, p => ({ by: Math.abs(S(TAU * p)) * 2, lift: step(p, 3) })),
     bob:   anim(0.5, 30, p => ({ by: breathe(p, 3) })),                                        // 고개 까딱
     preen: anim(1, 60, p => ({ by: 1 + breathe(p, 1.5), eye: 1 })),
-    flap:  anim(0.26, 16, p => ({ by: Math.abs(S(TAU * p)) * 2 })),
-    eat:   anim(0.4, 24, p => ({ by: breathe(p, 3), eye: p > 0.4 && p < 0.6 ? 1 : 0 })),       // 콕콕 쪼기
+    flap:  anim(0.26, 16, p => ({ grid: fly[[0, 1, 2, 1][Math.floor(p * 4)]], by: -Math.abs(S(TAU * p)) * 2 })),   // 제자리 날갯짓
+    eat:   anim(0.5, 30, p => { const d = Math.max(0, S(TAU * p)); return { grid: peck(Math.round(15 + 5 * d * d), d > 0.8 ? 1 : 0) }; }),   // 머리를 숙인 채 콕콕 쪼기
+    bend:  anim(0.3, 18, p => ({ grid: peck(Math.round(15 * Math.min(1, p * 1.25)), 0) })),            // 그릇 쪽으로 머리 숙이기
+    fly:   anim(0.36, 22, p => ({ grid: fly[[0, 1, 2, 1][Math.floor(p * 4)]], by: -2 * S(TAU * p), nofeet: true })),   // 날갯짓하며 날기
     sleep: anim(4, 120, p => ({ by: 1 + breathe(p, 1.6), eye: 2 })),
   };
 }
@@ -8508,7 +8611,7 @@ function petCoat(nth, vi) {                         // 강아지 털 무늬 번�
 }
 function petPack(kind, vi = 0, ci = 0) {                      // 종류·품종·털 무늬마다 한 번. 동작은 처음 쓸 때 그 동작만 굽는다
   if (kind === 'dog') return (PET_PACK['dog' + vi + '_' + ci] ||= dogSpritePack(vi, ci));
-  if (kind === 'parrot') return (PET_PACK.parrot ||= parrotSpritePack());
+  if (kind === 'parrot') return (PET_PACK['parrot' + vi] ||= parrotSpritePack(vi));
   return null;
 }
 const PET_BOND = [[3, '꼬리 흔들며 반기기'], [5, '앉아서 손 내밀기'], [7, '뛰어올라 반기기'], [9, '빙글빙글 좋아하기']];   // 강아지 친밀도 단계
@@ -8525,7 +8628,7 @@ DOG_BREEDS.forEach(b => { DOG_ART[b.id].tail = dogParts(DOG_ART[b.id]).tail; });
 const dogPal = (vi, ci) => { const b = DOG_BREEDS[vi] || DOG_BREEDS[0]; return { ...PETS.dog.pal, ...(b.coats[ci] || b.coats[0]).pal }; };
 const PET_DOINGS = {                                // [가중치, 행동]
   dog:    [[3, 'walk'], [1.5, 'sit'], [1.5, 'wag'], [2, 'zoom'], [0.7, 'bark'], [1, 'tilt'], [0.7, 'butterfly'], [0.4, 'pee'], [0.6, 'sleep']],
-  parrot: [[2.5, 'walk'], [2, 'sit'], [1.2, 'bob'], [1, 'preen'], [0.8, 'flap'], [0.7, 'sleep']],
+  parrot: [[3, 'fly'], [1, 'walk'], [2, 'sit'], [1.2, 'bob'], [1, 'preen'], [0.8, 'flap'], [1.2, 'peck'], [0.7, 'sleep']],
 };
 const pickWeighted = list => { let r = Math.random() * list.reduce((a, [w]) => a + w, 0); for (const [w, v] of list) if ((r -= w) <= 0) return v; return list[0][1]; };
 const petBounds = () => bounds();                    // 고양이와 같은 크기(124x92 상자)라 같은 이동 범위
@@ -8602,7 +8705,7 @@ class Pet {
     this.name = this.def.names[nth % this.def.names.length];
     this.el = document.createElement('div'); this.el.className = 'pet pet-' + kind;
     this.el.title = `${this.def.name} ${this.name} — 누르면 메뉴, 끌어서 옮기기`;
-    this.el.innerHTML = '<span class="shadow"></span><span class="pet-tip"></span><span class="pet-move"><canvas width="' + (kind === 'dog' ? '144" height="150' : kind === 'parrot' ? '72" height="81' : '60" height="42') + '"></canvas></span><span class="zzz"><i>z</i><i>z</i><i>Z</i></span>';
+    this.el.innerHTML = '<span class="shadow"></span><span class="pet-tip"></span><span class="pet-move"><canvas width="' + (kind === 'dog' ? '144" height="150' : kind === 'parrot' ? '132" height="90' : '60" height="42') + '"></canvas></span><span class="zzz"><i>z</i><i>z</i><i>Z</i></span>';
     document.body.appendChild(this.el);
     this.cv = this.el.querySelector('canvas'); this.ctx = this.cv.getContext('2d'); this.tipEl = this.el.querySelector('.pet-tip');
     const b = petBounds(), slot = Object.keys(PETS).indexOf(kind) + nth * 0.37;
@@ -8649,6 +8752,7 @@ class Pet {
   tip(t, ms = 1600) { this.tipEl.textContent = t; this.tipEl.classList.add('show'); clearTimeout(this.tipT); this.tipT = setTimeout(() => this.tipEl.classList.remove('show'), ms); }
   hop() { this.el.classList.remove('hop'); void this.el.offsetWidth; this.el.classList.add('hop'); setTimeout(() => this.el.classList.remove('hop'), 520); }
   walkTo(x, y, speed, run) { this.t0 = performance.now(); this.speedNow = speed; this.moveA = run ? this.def.run : this.def.walk; this.anim = 'walk'; this.target = [x, y]; return new Promise(r => { this.arrive = r; }); }
+  flyTo(x, y) { this.hop(); this.t0 = performance.now(); this.speedNow = 200; this.moveA = 'fly'; this.anim = 'walk'; this.target = [x, y]; return new Promise(r => { this.arrive = r; }); }   // 앵무새: 날갯짓하며 날아간다
   wake() { this.el.classList.remove('sleep'); if (this.anim === 'sleep') this.anim = 'sit'; this.napUntil = 0; if (this.mode === 'sleep') this.mode = 'idle'; }
   /* 메뉴에서 부르는 것들(모든 동물 공통 4가지): 쓰다듬기 · 사료/먹이 주기 · 낮잠 재우기 · 가만히 있기(메뉴가 stay 를 바꾼다) */
   pet() {
@@ -8670,6 +8774,7 @@ class Pet {
     el.setAttribute('viewBox', '0 0 30 18'); el.setAttribute('class', 'pet-food pet-food-' + food); el.innerHTML = FOOD_SVG[food];
     this.el.appendChild(el); this.anim = 'stand';
     await wait(560);
+    if (this.pack.bend) { this.anim = 'bend'; await wait(300); }            // 앵무새: 그릇 쪽으로 몸을 숙이고
     this.anim = 'eat'; this.tip(this.def.chew, 2600);
     await wait(2600);
     el.remove(); this.anim = 'sit'; this.tip(pickOne(this.def.sounds)); this.hop(); this.addLove(2);
@@ -8959,6 +9064,8 @@ class Pet {
       // 앵무새
       case 'bob': await hold('bob', 1800 + Math.random() * 1500, maybe(0.6)); break;                       // 고개 까딱까딱
       case 'preen': await hold('preen', 2400 + Math.random() * 1500); break;                               // 깃털 고르기
+      case 'fly': await this.flyTo(clampX(b.x0 + Math.random() * (b.x1 - b.x0)), clampY(b.y0 + Math.random() * (b.y1 - b.y0))); if (this.mode === 'idle') this.anim = 'stand'; break;   // 날아서 옮겨 가기
+      case 'peck': this.anim = 'bend'; await wait(300); if (this.mode === 'idle') await hold('eat', 1800 + Math.random() * 1600, Math.random() < 0.4 ? '콕콕' : null); break;   // 바닥 모이 쪼기
       case 'flap': for (let i = 0; i < 2; i++) { this.anim = 'flap'; this.hop(); if (!i) this.tip(pickOne(S), 900); await wait(520); } if (this.mode === 'idle') this.anim = 'stand'; break;
     }
   }

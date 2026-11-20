@@ -8413,65 +8413,84 @@ function dogSpritePack(vi, ci) {
 }
 
 /* ===================== 앵무새 ===================== */
-/* 그린칙 코뉴어 도트(24x27, 한 칸을 화면 3px 로). 큰 머리·큰 눈·볼터치, 왼쪽으로 겹친 날개(끝에 파란 깃), 회색 비늘 가슴·빨간 배, 밤색 꼬리 */
+/* 코뉴어 도트(45x45, 한 칸을 화면 2px 로). 사용자가 보낸 참고 그림(사용자 확인: 픽시브 무료 이미지)을 칸 그대로 옮긴 것. 11-20 사용자 지시로 공개판에도 그대로 쓴다 */
 const CONURE_MAP = [
-  '..........OOOOOOOO......',
-  '........OOddddddddOO....',
-  '.......OdddDDDDDDDDDO...',
-  '......OddDDDDDDDDDDDDO..',
-  '......OdDDDDDDDDDDDDDO..',
-  '.....OdDDDDKKKDDDDDDDO..',
-  '.....ODDDDDKKLDDDDOqQO..',
-  '.....ODDDDDKKKDDDDOqQQO.',
-  '.....ONNDDDKKKDDDNOQQQO.',
-  '.....ONNZZNNNNNNNNOQQO..',
-  '.....ONNZZNNNNNNNNNOO...',
-  '....OONNNNNNNNNNNNNNO...',
-  '..OOIIIIGAAAAAAAAAAAnO..',
-  '.OIIIIIIIGAaAAaAAaAAAnO.',
-  '.OBIIIIIIIGAAaAAaAAaAnO.',
-  'OBBBIIIIIIIGAaAAaAAaAnO.',
-  'OGBBBBIIIIIGAMMMMMMAAnO.',
-  'OUGBBBBBIIIGMMmMMMmMBnO.',
-  'OUUGGBBBBBIGMMMMMMMMBnO.',
-  '.OUUGGGBBBBBGMMMmMMBBnO.',
-  '..OUUGGGGGGGBMMMMBBBnO..',
-  '.OTOOUUGGGGGBBBBBBBBnO..',
-  'OTTO.OOOOOOOGBBBBBBnO...',
-  'OTO........OOOOOOOO.....',
-  'OO........OFO....OFO....',
-  '.........OFFFO..OFFFO...',
-  '.........OOOOO..OOOOO...',
+  '........................OOOOOOOOOOO..........',
+  '.......................OPPPPPPPPPPPOO........',
+  '.....................OOPPPPPPPPPPPPPPO.......',
+  '....................OPPPPPPPPPPPPPPPPPO......',
+  '...................OPPPPPPPPPPPPPPPPPPO......',
+  '..................OPPPPPPPPPPPPPPHHHPPPO.....',
+  '..................OPPPPPPPPPPPPPRHNNNPPO.....',
+  '..................OPPPPPOOOPPPPRHHNNNHPO.....',
+  '..................OPPPPOOWWOPPPHHHHHHHOO.....',
+  '.................OPPPPPOOOOOPPPHHHRRHHOO.....',
+  '.................OPPPPPOOOOOPPPHHROORZOO.....',
+  '.................OPPPPPOOOOOPPPOOOOOOPPZO....',
+  '................OPPPPPPPOOOPPPPPROOOOPPZZO...',
+  '................OPPPPPPZPPPPPPPPORRROPPZZZO..',
+  '................OPPPPPZZZZPPPPPPOHHHHPPZZZO..',
+  '................OPPPPZZZZZZPPPPPPHHHHPPZZZO..',
+  '................OPPPPPZZZZZPPPPPPPOPPPPPPO...',
+  '................OBPPPPPZZZPPPPPPPPPPPPPPPO...',
+  '................OBIIPPPPPPPPPPPPPPPPPPPPPO...',
+  '...............OOBIIIIPPPPPPPPPPPPPPPPPPPOO..',
+  '.............OOIIIIIIIIPWWWPPPPPPPPPPPPPWWGO.',
+  '............OOIIIIIIIIIIWWWWPPPPPPPPPWPWWWGO.',
+  '...........OIIIIIIIIIIIIWWWWWWWWWWPWWWWWWWGGO',
+  '...........OIIIIIIIIIIIIIIWWWWWWWWWWWWWWWWGGO',
+  '......OOOOOIIIIIIIIIIIIIIIGWWWWWWWWWWWWWWWWGO',
+  '.....OGGGGBIIIIIiIIIIIIIIIGWWWWWWWWWWWWWWWGGO',
+  '.....OGGGGBIIIIIBBIIIIIIIIGWWWWWWWWWWWWWWWGGO',
+  '....OGGBBBBBIIIIIIIIIIIIIIBWWWWWWWWWWWWCCCGGO',
+  '....OGBBBBBBBIIIIIIIIIIIiBBCWWWWWWWWWWCCCCGO.',
+  '.OOOOGBBBBBBBIIIIIIIIIIIBBBCWWWCWWWWWWCCCCO..',
+  'OGGGGGGGGBBBBBBIIIIIIBBGGGBCCWWCCWWWWCCCCO...',
+  'OGGGGGGGgBBBBBBBIIIiBBGBBFCCCCCCCCCCCCCCCO...',
+  '.OOGggGGGGGGGBBiBBBBBBggCCCCCCCCCCCCCCCCO....',
+  '...OggGGGGGGGggBBBGGGGFCCCCCCCCCCCCCCCCM.....',
+  '....OOGGGGGGGGGGGGGGGJFCCCCCCCCCCCCCCFFO.....',
+  '.....OOOOOOOOOOOOGGMMFCCCCCCCCCCCCCCFCM......',
+  '.................OFFFFCCCCCCCCCCCCCFFCO......',
+  '..................OFFFCCCCCFFFFFFFFFFO.......',
+  '...................OOFFFCCCCFFFFOOFFOOO......',
+  '.....................OFFFFOOOOOO..OOJJMOO....',
+  '....................OMJMFMJO.....OMJMMFFFO...',
+  '...................OJJJJFFJJO.....OOOOJJJO...',
+  '....................OOOJFMFFO.........OOO....',
+  '.......................OOOJJO................',
+  '..........................OO.................',
 ];
-const CONURE_PAL = { D: '#8a7d75', d: '#a89b92', N: '#8cc768', Z: '#f0a3a0', R: '#f6f2ea', Q: '#4a4646', q: '#7a7572', A: '#dcd6cc', a: '#aaa298', M: '#e06a5a', m: '#b8473b', B: '#7cc25a', G: '#55963c', I: '#b8e08a', U: '#5b86d6', T: '#a0463a', F: '#8f8a86', n: '#6fae4e' };
+const CONURE_PAL = { P: '#f0ccae', W: '#ffffff', I: '#c0d272', B: '#8aa866', G: '#5a845a', g: '#36483c', i: '#a8c06c', C: '#c0c0ba', F: '#a29690', J: '#665a66', M: '#7e7278', H: '#e49054', R: '#d26654', N: '#f6e49c', Z: '#e4968a' };
 /* 앵무새 모델(PETS.parrot.models 순서). px: 한 칸 화면 크기, cw·ox: 캔버스 넓이와 새를 띄우는 칸 수(날개·숙인 고개 자리),
    foot·footY: 따로 들어 걷는 발 칸, draw: 모이 쪼기·날기 그림을 장마다 새로 그리는 값(아래 parrotDrawPeck·parrotDrawFly),
    shut: 눈 감은 그림, fluff: 털을 부풀릴 때 한 칸 넓히는 몸 색 */
-/* 코뉴어 표정(24x27 판): 원래 눈 칸(5~8줄, 11~13칸)을 지우고 표정 눈을 찍는다. 웃음 ^^ · 놀람 · 졸림 · 뾰로통 · 하트 */
-const conureEye = (g, rows, y0, x0) => { for (let y = 4; y <= 9; y++) for (let x = 10; x <= 14; x++) if ('KL'.includes(g[y][x])) g[y][x] = 'D';
+/* 코뉴어 표정: 원래 눈 칸(7~12줄, 22~28칸)을 지우고 표정 눈을 찍는다. 웃음 ^^ · 놀람(크게 뜬 눈) · 졸림(반쯤 감김) · 뾰로통(눈썹+반쯤 감김) · 하트 */
+const conureEye = (g, rows, y0, x0) => { for (let y = 6; y <= 12; y++) for (let x = 22; x <= 28; x++) if ('OWR'.includes(g[y][x])) g[y][x] = 'P';
   rows.forEach((r, i) => [...r].forEach((c, j) => { if (c !== '.') g[y0 + i][x0 + j] = c; })); };
 const CONURE_FACES = {
-  joy:    g => conureEye(g, ['.K.', 'K.K'], 6, 11),
-  shock:  g => conureEye(g, ['.KKK.', 'KLLLK', 'KLKLK', 'KLLLK', '.KKK.'], 4, 10),
-  sleepy: g => conureEye(g, ['KKK', 'KKK'], 7, 11),
-  grumpy: g => conureEye(g, ['KK..', '..K.', '.KKK', '.KKK'], 4, 10),
-  love:   g => conureEye(g, ['M.M', 'MMM', '.M.'], 6, 11),
+  joy:    g => conureEye(g, ['..O..', '.O.O.', 'O...O'], 8, 23),
+  shock:  g => conureEye(g, ['.OOOOO.', 'OWWWWWO', 'OWWOOWO', 'OWWOOWO', 'OWWWWWO', '.OOOOO.'], 6, 22),
+  sleepy: g => conureEye(g, ['OOOOO', 'OOOOO', '.OOO.'], 10, 23),
+  grumpy: g => conureEye(g, ['OO...', '..OO.', '....O', 'OOOOO', 'OOOOO', '.OOO.'], 5, 22),
+  love:   g => conureEye(g, ['.RR.RR.', 'RRRRRRR', 'RRRRRRR', '.RRRRR.', '..RRR..', '...R...'], 7, 22),
 };
 const PARROT_MODELS = [
-  { map: CONURE_MAP, pal: CONURE_PAL, px: 3, cw: 44, ox: 8, foot: [[9, 13], [16, 20]], footY: 25, fluff: 'BGIn', faces: CONURE_FACES,
-    draw: { back: [11, 15.5, 9.5, 6, 'B'], head: { cx: 13.5, cy: 6, rx: 8.2, ry: 6.6, fill: 'N', cap: ['D', 7], bodyX: 4, feats: [{ r: [5, 8, 11, 13], keep: 'KL', eye: 1, side: [0.3, -0.1] }, { r: [9, 10, 8, 9], keep: 'Z', side: [0.05, 0.45] }, { r: [6, 10, 19, 22], keep: 'qQO', free: 1, front: 1 }],
-        beak: ['OOO.', 'OqQO', 'OQQO', '.OQO', '..O.'] },
-      peck: [[0, 13.5, 6, 0, 0, 11, 8, 0.1, 0.1, 0, 0], [0.25, 16, 7.5, 0, 0, 13, 9, 6, 3, 8, 0], [0.5, 19, 10.5, 0, 1, 15, 11, 6, 4, 10, 0], [0.75, 22, 14, -1, 2, 17, 13, 6, 4, 12, 0], [1, 23, 15.5, -1, 2, 18, 14, 6, 4, 12, 0]],
-      pose: { lean: 32, pivot: [14, 16], neckY: 11, shift: [-2, -2], headShift: [4, 3], wingFill: 'B', tailRoot: [4, 21], tailLean: 0.5 },
-      wing: { y0: 12, y1: 21, x0: 0, x1: 11, set: 'IBGU', fill: 'B', tail: [4, 19], body: [14, 17, 9, 7], sx: 9, sy: 13, L: 11, W: 6, lines: 3, colors: 'IBUG', behind: 'BIGn' } },
-    shut: g => { for (let y = 5; y <= 8; y++) for (let x = 11; x <= 13; x++) if ('KL'.includes(g[y][x])) g[y][x] = g[y][14]; g[7][11] = g[7][12] = g[7][13] = 'K'; } },
+  { map: CONURE_MAP, pal: CONURE_PAL, px: 2, cw: 66, ox: 8, foot: [[19, 28], [33, 41]], footY: 40, fluff: 'IBG',
+    draw: { back: [28, 26, 14, 8.5, 'I'], neck: ['I', 'W'], cutBack: 1, head: { cx: 29.5, cy: 9.5, rx: 12.6, ry: 10.2, fill: 'P', bodyX: 14, feats: [{ r: [7, 12, 23, 27], keep: 'OW', eye: 1, side: [0.3, -0.05] }, { r: [13, 17, 21, 26], keep: 'Z', side: [0.05, 0.4] }, { r: [5, 7, 31, 37], keep: 'HN', side: [0.5, -0.5] }, { r: [5, 16, 31, 37], keep: 'HNRO', free: 1, front: 1 }, { r: [9, 16, 38, 41], keep: 'Z', front: 1 }],
+      beak: ['.OOOO..', 'OHHNHO.', 'OHHHHHO', 'OHHHHHO', '.OHHRRO', '.OHRRO.', '..ORO..', '...O...'] },
+    peck: [[0, 29.5, 9.5, 0, 0, 26, 17, 0.1, 0.1, 0, 0], [0.25, 33, 12.5, 0, 1, 29, 19, 10, 6, 16, 0], [0.5, 37, 18, -1, 3, 32, 21, 10, 7, 20, 0], [0.75, 41, 24.5, -2, 5, 34, 24, 10, 7, 22, 0], [1, 42, 26.5, -2, 6, 35, 25, 10, 7, 22, 0]],
+    pose: { lean: 32, pivot: [32, 27], neckY: 20, shift: [-3, -3], headShift: [7, 6], wingFill: 'I', tailRoot: [12, 30], tailLean: 0.5 },
+    wing: { y0: 17, y1: 35, x0: 0, x1: 26, set: 'IBGgi', fill: 'C', tail: [12, 29], body: [27, 29, 15.5, 10.5], sx: 19, sy: 23, L: 22, W: 15, up: 0.8, lines: 3, colors: 'IBGg', behind: 'BIG' } },
+    faces: CONURE_FACES,
+    shut: g => { for (let y = 7; y <= 12; y++) for (let x = 23; x <= 27; x++) if ('OW'.includes(g[y][x])) g[y][x] = 'P'; for (let x = 23; x <= 27; x++) g[10][x] = 'O'; g[11][23] = g[11][27] = 'P'; } },
 ];
 /* 코뉴어 색 모델(PETS.parrot.models 순서): 그림은 같고 몸·날개·꼬리 색만 바꾼다(블루는 얼굴도 흰빛) */
 const CONURE_COLORS = [
-  { N: '#9fd0d8', B: '#7fb8c8', G: '#4f8a9c', I: '#b8e2ea', n: '#6aa2b4', M: '#9aa4b8', m: '#76809a' },                 // 블루
-  { N: '#e8e07a', B: '#d6cc58', G: '#b0a23a', I: '#f2ea9a', n: '#c4b84a' },                                             // 옐로
-  { D: '#b09a80', d: '#c8b49a', N: '#b4c890', B: '#a0b878', G: '#7c9258', I: '#cadca8', n: '#90a868' },                 // 시나몬
-  { N: '#b8acd8', B: '#9c90c8', G: '#74689e', I: '#c8c0e8', n: '#8a7eb8', M: '#c07898', m: '#985878' },                 // 바이올렛
+  { P: '#ece6de', I: '#a9d4dc', B: '#7aaab8', G: '#4f7d92', g: '#30485a', i: '#98c4d0', Z: '#e4b4b0' },                  // 블루
+  { I: '#f2e48a', B: '#e2c85a', G: '#c4a43a', g: '#7e6420', i: '#eadc78', C: '#e8e0c8', F: '#c8bca0' },                  // 옐로
+  { I: '#cfd0a0', B: '#aeb07c', G: '#86865a', g: '#56543a', i: '#c2c494', C: '#cbbfae', F: '#a8998a' },                  // 시나몬
+  { I: '#c2b8e2', B: '#9c90c8', G: '#74689e', g: '#463e6c', i: '#b2a8d8', Z: '#e8a0b4' },                                // 바이올렛
 ];
 CONURE_COLORS.forEach(c => PARROT_MODELS.push({ ...PARROT_MODELS[0], pal: { ...PARROT_MODELS[0].pal, ...c } }));
 function parrotLayer(md, keep, edit) {             // md: 모델. keep(y, x): 남길 칸. edit(g): 눈 감기·털 부풀리기
